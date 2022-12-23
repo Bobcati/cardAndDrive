@@ -53,8 +53,32 @@ to:
    <img width="575" alt="Screen Shot 2022-12-23 at 3 49 07 PM" src="https://user-images.githubusercontent.com/108192537/209362847-b76cecec-a5be-4a42-b757-e8855170db6f.png">
 
 Then type CTRL-X and then CTRL-S to save your changes.
+Then you must type on the pi
+```bash
+sudo systemctl restart netatalk
+```
+
+
+
 Next, connect to the server on your mac by pressing on finder, go, and connect to server:
 <img width="650" alt="Screen Shot 2022-12-23 at 3 52 52 PM" src="https://user-images.githubusercontent.com/108192537/209363328-3826bf21-2af0-4afc-8844-0eff3f527b21.png">
+
+On your raspberry pi, type in the terminal:
+```bash
+ifconfig
+```
+Your raspberry pi's IP address should be located after:
+```bash
+wlan0: flags=<234567890987654> mut 1200
+   inet 192.168.123.123 
+```
+The ip address listed inet is your pi's IP address. Keep note of it
+
+Back on your mac, add a new server by typing afp:// followed by your serial number.
+<img width="481" alt="Screen Shot 2022-12-23 at 4 02 37 PM" src="https://user-images.githubusercontent.com/108192537/209364515-11689cf0-7ab4-463f-a7ed-219ba2323023.png">
+You will then be prompted to put in user credentials. USE YOUR RASPBERRY PI'S USERNAME AND PASSWORD
+<img width="848" alt="Screen Shot 2022-12-23 at 4 21 30 PM" src="https://user-images.githubusercontent.com/108192537/209366959-b6c958ec-24a2-42cf-bf5a-b5b12098c932.png">
+Now you can access the folders and files in your raspberry pi and edit them like they are on your mac.
 
 
 ## Usage

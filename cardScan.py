@@ -55,10 +55,10 @@ def textImageProcessor():
     hdImage = "/home/bobcaticus/cardScanner/Card_Pics_" + str(picSet) + "/" + cardPicList[cardIndex] # Goes through global hard drive jpg list
     croppedImage = Image.open(hdImage)
     # Setting the points for cropped image
-    left = 1550
-    top = 850
-    right = 3130
-    bottom = 1120
+    left = 1700
+    top = 330
+    right = 2660
+    bottom = 475
     
     # Cropped image of above dimension
     # (It will not change original image)
@@ -78,16 +78,21 @@ def textImageProcessor():
 def writeReport():
     global picSet
     global cardList
-    
-    os.system("mkdir Card_Pics_" + str(picSet))
-    takePicture()
-    for i in range(30):
-       textImageProcessor()
-    print(str(cardList))
-    csvScribe()
-    print
-    print("Report #" + str(picSet) + " completed")
-    time.sleep(3)
+    processFromExisting = input("Would you like to input from an existing folder? (Y/N): ")
+
+    if processFromExisting.upper() == "Y":
+        picSet = int(input("Enter picture set number: "))
+        for i in range(30):
+            textImageProcessor()
+    else:
+        os.system("mkdir Card_Pics_" + str(picSet))
+        takePicture()
+        for i in range(30):
+            textImageProcessor()
+        print(str(cardList))
+        csvScribe()
+        print("Report #" + str(picSet) + " completed")
+        time.sleep(3)
 
 # Might be redundanct (cvsCreator already does the job)
 def header():

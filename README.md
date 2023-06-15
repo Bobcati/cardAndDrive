@@ -58,8 +58,6 @@ Then you must type on the pi
 sudo systemctl restart netatalk
 ```
 
-
-
 Next, connect to the server on your mac by pressing on finder, go, and connect to server:
 <img width="650" alt="Screen Shot 2022-12-23 at 3 52 52 PM" src="https://user-images.githubusercontent.com/108192537/209363328-3826bf21-2af0-4afc-8844-0eff3f527b21.png">
 
@@ -90,5 +88,4 @@ You will be prompted to input a folder number. Make sure it is a different numbe
 Align the card under the camer and press any letter on the keyboard except for "n" and then the enter key to to take a picture. Continue this in batches of 30 cards. If you wish to make a smaller batch, simply take pictures without any cards underneath the camera until the program finishes.
 You will be prompted to make another batch after one batch of 30 finishes. You can either select "y" to make a new batch or "n" to stop the program.
 
-The program will create a csv file with all of the card numbers that you can upload to your computer using a netatalk server.
-To access the netatalk server on your mac.
+The program will create a csv file with all of the card numbers that you can upload to your computer using a netatalk server. Connect to the raspberry pi using the steps listed above. You will be able to drag and drop the csv file with the serial numbers onto your desktop. 

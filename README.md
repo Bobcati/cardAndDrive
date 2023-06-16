@@ -21,19 +21,8 @@ Then, you will need to make a cardScanner folder by typing in the linux terminal
 ```bash
 mkdir cardScanner
 ```
-You will also need to change the path in the cardScanner.py file. On lines 55, 95, and 106, YOU MUST CHANGE "bobcaticus" INTO YOUR OWN USERNAME:
-```bash
-55: hdImage = "/home/bobcaticus/cardScanner/Card_Pics_" + str(picSet) + "/" + cardPicList[cardIndex] # Goes through global hard drive jpg list
-95: with open(('/home/bobcaticus/cardScanner/Card_Log_1.csv'), 'a', newline='') as driveLog 
-106: with open(('/home/bobcaticus/cardScanner/Card_Log_1.csv'), 'a', newline='') as driveLog:
-```
-Change bobcaticus to you username. For example, if you changed your username to "leopard"
-```bash
-55: hdImage = "/home/leopard/cardScanner/Card_Pics_" + str(picSet) + "/" + cardPicList[cardIndex] # Goes through global hard drive jpg list
-95: with open(('/home/leopard/cardScanner/Card_Log_1.csv'), 'a', newline='') as driveLog 
-106: with open(('/home/leopard/cardScanner/Card_Log_1.csv'), 'a', newline='') as driveLog:
-```
 
+## MacOS Usage
 Next you need to enable a server to connect to your laptop. On the raspberry pi terminal type;
 ```bash
 sudo nano /etc/netatalk/afp.conf
@@ -78,14 +67,19 @@ You will then be prompted to put in user credentials. USE YOUR RASPBERRY PI'S US
 <img width="848" alt="Screen Shot 2022-12-23 at 4 21 30 PM" src="https://user-images.githubusercontent.com/108192537/209366959-b6c958ec-24a2-42cf-bf5a-b5b12098c932.png">
 Now you can access the folders and files in your raspberry pi and edit them like they are on your mac.
 
+## Windows Usage
+With windows, you can connect to the pi using WinSCP (Windows secure copy)
+Install the free and open source WinSCP tool using the following instructions: https://winscp.net/eng/download.php
+When you open WinSCP, you will be prompted by a login screen similar to that of the server in MacOS. In the hostname, type in the pi IP address (instructions above). Then type the username and password you set for the raspberry pi during installation. 
+<img width="586" alt="Screen Shot 2023-06-16 at 8 52 14 AM" src="https://github.com/Bobcati/cardAndDrive/assets/108192537/83bf0c92-21ad-4028-a109-3ed03831c9d2">
 
 ## Usage
 Simply run the cardScanner.py file in your raspberry pi terminal by typing:
 ```bash
 python3 cardScanner.py
 ```
-You will be prompted to input a folder number. Make sure it is a different number from the image folders you have made previously.
-Align the card under the camer and press any letter on the keyboard except for "n" and then the enter key to to take a picture. Continue this in batches of 30 cards. If you wish to make a smaller batch, simply take pictures without any cards underneath the camera until the program finishes.
-You will be prompted to make another batch after one batch of 30 finishes. You can either select "y" to make a new batch or "n" to stop the program.
+You will be prompted to input a folder number, card batch size, and home directory (your username is your home director). Make sure your folder number is a different from the image folders you have made previously.
+Align the card under the camer and press any letter on the keyboard except for "n" and then the enter key to to take a picture.
 
-The program will create a csv file with all of the card numbers that you can upload to your computer using a netatalk server. Connect to the raspberry pi using the steps listed above. You will be able to drag and drop the csv file with the serial numbers onto your desktop. 
+The program will create a csv file with all of the card numbers that you can upload to your computer using a netatalk server. Connect to the raspberry pi using the steps listed above. You will be able to drag and drop the csv file with the serial numbers onto your desktop using WinSCP or the MacOS server. 
+Watch the demo video below: 

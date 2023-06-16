@@ -10,13 +10,9 @@ from platform import python_branch
 from libcamera import controls
 import cv2
 import pytesseract
-import numpy as np
 from pytesseract import Output
-import nltk 
-from nltk.tokenize import word_tokenize
 import time # for taking camera stills
 import keyboard
-import mysql.connector
 from csv import writer
 import os
 from PIL import Image
@@ -31,32 +27,56 @@ picam2.start(show_preview=True)
 picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous, "AfSpeed": controls.AfSpeedEnum.Fast})
 
 # Set file locations
-picSet = int(input("Enter picture set number: ")) # Global variable for the hard drive log number
 homeDirectory = input("Enter your pi home directory: ")
-batchSize = int(input("Enter the card batch size you wish to record: "))
+batchSize = 0
+picSet = 0
+#Declare picSet and batchSize with incorrect input rejection
+def declarePicAndBatch():
+    global batchSize, picSet
+    #Incorrect input rejection
+    initBatchSize = input("Enter the card batch size you wish to record: ")
+    while initBatchSize.isdigit() != True or initBatchSize == 0:
+        if initBatchSize.isdigit():
+            batchSize = int(initBatchSize)
+            break
+        else:   
+            initBatchSize = input("Please enter a valid integer for batch size: ")
+    batchSize = int(initBatchSize)
+
+    initPicSet = input("Enter picture set number: ") # Global variable for the hard drive log number
+    while initPicSet.isdigit() != True:
+        if initPicSet.isdigit():
+            picSet = int(initPicSet)
+            break
+        else:
+            initPicSet = input("Please enter a valid integer for picture set number: ")
+    picSet = int(initPicSet)
+declarePicAndBatch()
+
 cardPicList = []
 cardList = []
 cardIndex = 0 # must be global otherwise resets to 0 every time, which is bad!
 imagesTaken = 0
 tempLocation = ""
+print("Batch size: " + str(batchSize))
+print("Picture set number: " + str(picSet))
 
 #Callibration and draw_rectangle defaults
-left = 1700
-top = 330
-right = 2660
-bottom = 475
+left = 0
+top = 0
+right = 1
+bottom = 1
 roi_point = []
 is_button_down = False
 
 for i in range(batchSize):
     cardPicList.append("card_" + str((i + 1)) + ".jpg")
 
-
 # Initialize the camera for first image processing and take picture
 def takePicture():
     global cardPicList
     global imagesTaken
-    for i in range(batchSize):
+    for i in range(int(batchSize)):
         take = input("Take a photo (y/n): ")
         if (take.lower() != "n"):
             imagesTaken = imagesTaken + 1
@@ -80,7 +100,6 @@ def textImageProcessor(imgLocation):
     rawText = pytesseract.image_to_data(croppedImage, output_type=Output.DICT) # Raw dictionary 
     recordedList = rawText['text'] #Text list subset of rawText diciontary
     recordedString = ' '.join(rawText['text'])
-    print("Recorded String \n" + recordedString)
     return recordedString
 
 
@@ -99,12 +118,14 @@ def callibration(fileLocation):
     cv2.resizeWindow("Resize", 1536, 864)
     cv2.imshow("Resize", image)
     cv2.setMouseCallback("Resize", draw_rectangle)
-    exitCode = input("Press 'c' when you finish drawing the bounding box: ")
+    exitCode = input("Press any keyboard button (except 'n') when you finish drawing the bounding box: ")
+
+    
     # loop until the 'c' key is pressed
     while True:
         # display the image 
         # wait for a keypress
-        if exitCode.lower() == "c":
+        if exitCode.lower() != "n":
             left = roi_point[0][0]
             top = roi_point[0][1]
             right = roi_point[1][0]
@@ -140,19 +161,6 @@ def draw_rectangle(event, x, y, flags, param):
     # if the left mouse button was released
     elif event == cv2.EVENT_LBUTTONUP:        
         roi_point.append((x, y))     # append the end point
-        
-        # ======================
-        # print the bounding box
-        # ======================
-        # in (x1,y1,x2,y2) format
-        print(roi_point)                  
-        
-        # in (x,y,w,h) format
-        bbox = (roi_point[0][0],
-                roi_point[0][1],
-                roi_point[1][0] - roi_point[0][0],
-                roi_point[1][1] - roi_point[0][1])
-        print(bbox)
 
         # button has now been released
         is_button_down = False
@@ -167,28 +175,28 @@ def draw_rectangle(event, x, y, flags, param):
 def fixCardDataAndAdd():
     global tempLocation
     print("Recorded Card Serial Numbers: \n")
-    for i in range(batchSize):   
-        print("Card #" + str(i+1) + ": " + cardList[i] + "\n")
+    for i in range(int(batchSize)):   
+        print("Card #" + str(i+1) + ": " + cardList[i])
 
     needToFix = (input("Do you want to manually fix serial numbers? (Y/N): "))
     while needToFix.upper() != "Y" or needToFix.upper() != "N":
-        if needToFix.upper() == "Y": # NEED TO  ADD INCORRECT INPUT REJECTION ie. non integer inputs, 0 entered by accident
+        if needToFix.upper() == "Y": # NEED TO ADD INCORRECT INPUT REJECTION ie. non integer inputs, 0 entered by accident
             cardNumToFix = int(input("Enter the number you want to fix (ie. 1, 3, 20): "))
             print("You have chosen to fix card #" + str(cardNumToFix) + ": " + cardList[cardNumToFix - 1])
 
             #Displays image of card that was incorrect to recallibrate
             picLoc = "/home/" + homeDirectory + "/cardScanner/Card_Pics_" + str(picSet) + "/" + cardPicList[cardNumToFix - 1]
-            print("Please redraw bounding box: ")
-            cardImage = cv2.imread(picLoc)
-            cv2.namedWindow("Resize", cv2.WINDOW_NORMAL)
-            cv2.resizeWindow("Resize", 1536, 864)
-            cv2.imshow("Resize", cardImage)
+            print("Please redraw bounding box")
             tempLocation = picLoc # to make sure draw_rectangle updates the current image
 
             # Recallibrate if the serial number is not read correctly
             callibration(picLoc) 
             correctedSN = textImageProcessor(picLoc)
             print("The new recorded serial number is: " + correctedSN)
+            cardImage = cv2.imread(picLoc)
+            cv2.namedWindow("Resize", cv2.WINDOW_NORMAL)
+            cv2.resizeWindow("Resize", 1536, 864)
+            cv2.imshow("Resize", cardImage)
             enterManually = input("Has the serial number been entered correctly now? (Y/N): ")
             if enterManually.lower() == "n":
                 correctedSN = input("Enter the corrected serial number: ")
@@ -198,8 +206,8 @@ def fixCardDataAndAdd():
             break
         else:
             print("Please type a valid answer")
-        for i in range(batchSize):   
-            print("Card #" + str(i+1) + ": " + cardList[i] + "\n")
+        for i in range(int(batchSize)):   
+            print("Card #" + str(i+1) + ": " + cardList[i])
         needToFix = (input("Do you want to manually fix serial numbers? (Y/N): "))
 
 #Function that writes the HDD report
@@ -210,13 +218,13 @@ def writeReport():
     processFromExisting = input("Would you like to input from an existing folder? (Y/N): ")
 
     if processFromExisting.upper() == "Y":
-        picSet = int(input("Enter picture set number: "))
+        print("Processing from existing folder #" + str(picSet))
     else:
         os.system("mkdir Card_Pics_" + str(picSet))
         takePicture()
     tempLocation = initialImageLocation # Make sure draw reectangle works correctly for current image
     callibration(initialImageLocation)
-    for i in range(batchSize):
+    for i in range(int(batchSize)):
         recordedString = textImageProcessor("/home/" + homeDirectory + "/cardScanner/Card_Pics_" + str(picSet) + "/" + cardPicList[cardIndex]) # Goes through global hard drive jpg list)
         cardList.append(recordedString)
         cardIndex = cardIndex + 1 # Prepares for next loop
@@ -224,25 +232,12 @@ def writeReport():
     csvScribe()
     print("Report #" + str(picSet) + " completed")
     time.sleep(1)
-
-# Might be redundanct (cvsCreator already does the job)
-def header():
-    # /home/pi/barcodeScanner/Hard_Drive_Log_'
-    with open(("/home/" + homeDirectory + "/cardScanner/Card_Log_1.csv"), 'a', newline='') as driveLog:  
-        header = ['Serial_Number'] # Column data
-        # Pass the CSV  file object to the writer() function
-        writer_object = writer(driveLog)
-        # Result - a writer object
-        # Pass the data in the list as an argument into the writerow() function
-        writer_object.writerow(header)  
-        # Close the file object
-        driveLog.close()
     
 def csvScribe():
-    with open(("/home/" + homeDirectory + "/cardScanner/Card_Log_1.csv"), 'a', newline='') as driveLog:
+    with open(("/home/" + homeDirectory + "/cardScanner/Card_Log.csv"), 'a', newline='') as driveLog:
         # Pass the CSV  file object to the writer() function
         writer_object = writer(driveLog)
-        for x in range(batchSize):
+        for x in range(int(batchSize)):
             driveData = [cardList[x]] # Column data from master list
             # Result - a writer object
             # Pass the data in the list as an argument into the writerow() function
@@ -257,18 +252,17 @@ def looper():
     global picSet
     global cardIndex
     global imagesTaken
-    header()
     writeReport()
 
     writeAnother = input("Would you like to complete another report? (Y/N): ")
     while writeAnother.upper() != "Y" or writeAnother.upper() != "N": # Ensures user enters valid answer - redundancy
         if writeAnother.upper() == "Y":
-            picSet = int(input("Enter picture set number: "))
+            declarePicAndBatch()
             cardIndex = 0
             imagesTaken = 0
             looper()
         elif writeAnother.upper() == "N":
-            print("Goodbye: ")
+            print("Goodbye")
             sys.exit()
         else:
             print("Please type a valid answer")

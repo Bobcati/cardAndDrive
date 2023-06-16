@@ -8,7 +8,6 @@ You will need to install several packages on your raspberry pi. In the linux ter
 ```bash
 sudo apt-get install python3-h5py
 sudo apt-get install libatlas-base-dev
-pip3 install -U numpy
 pip3 install keyboard
 pip3 install opencv-python
 sudo apt install tesseract-ocr

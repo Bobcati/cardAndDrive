@@ -80,7 +80,7 @@ def takePicture():
         take = input("Take a photo (y/n): ")
         if (take.lower() != "n"):
             imagesTaken = imagesTaken + 1
-            picam2.start_and_capture_file("Card_Pics_" + str(picSet) + "/" + cardPicList[i]) # Saves images to dedicated image directory for each hard drive log
+            picam2.capture_file("Card_Pics_" + str(picSet) + "/" + cardPicList[i]) # Saves images to dedicated image directory for each hard drive log
             print("Image " + str(i+1) + " captured")
 
 

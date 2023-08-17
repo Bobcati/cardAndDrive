@@ -82,4 +82,3 @@ You will be prompted to input a folder number, card batch size, and home directo
 Align the card under the camera and press any letter on the keyboard except for "n" and then the enter key to to take a picture.
 
 The program will create a csv file with all of the card numbers that you can upload to your computer using a netatalk server. Connect to the raspberry pi using the steps listed above. You will be able to drag and drop the csv file with the serial numbers onto your desktop using WinSCP or the MacOS server. 
-Watch the demo video below: 

@@ -18,6 +18,10 @@ Then, you will need to make a cardScanner folder by typing in the linux terminal
 ```bash
 mkdir cardScanner
 ```
+Then you will need to clone this github repository with the following command
+```bash
+git clone https://github.com/Bobcati/cardAndDrive.git
+```
 
 ## MacOS Usage
 Next you need to enable a server to connect to your laptop. On the raspberry pi terminal type;
@@ -76,7 +80,7 @@ Simply run the cardScanner.py file in your raspberry pi terminal by typing:
 python3 cardScanner.py
 ```
 You will be prompted to input a folder number, card batch size, and home directory (your username is your home director). Make sure your folder number is a different from the image folders you have made previously.
-Align the card under the camer and press any letter on the keyboard except for "n" and then the enter key to to take a picture.
+Align the card under the camera and press any letter on the keyboard except for "n" and then the enter key to to take a picture.
 
 The program will create a csv file with all of the card numbers that you can upload to your computer using a netatalk server. Connect to the raspberry pi using the steps listed above. You will be able to drag and drop the csv file with the serial numbers onto your desktop using WinSCP or the MacOS server. 
 Watch the demo video below: 

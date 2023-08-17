@@ -57,7 +57,7 @@ ifconfig
 ```
 Your raspberry pi's IP address should be located after:
 ```bash
-wlan0: flags=<234567890987654> mut 1200
+wlan0: flags=<123456789098765> mut 1100
    inet 192.168.123.123 
 ```
 The ip address listed inet is your pi's IP address. Keep note of it

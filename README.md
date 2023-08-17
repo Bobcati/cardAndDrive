@@ -53,12 +53,11 @@ Next, connect to the server on your mac by pressing on finder, go, and connect t
 
 On your raspberry pi, type in the terminal:
 ```bash
-ifconfig
+hostname -I
 ```
-Your raspberry pi's IP address should be located after:
+Your raspberry pi's IP address will be output. It will look something likke this:
 ```bash
-wlan0: flags=<123456789098765> mut 1100
-   inet 192.168.123.123 
+192.168.12.12
 ```
 The ip address listed inet is your pi's IP address. Keep note of it
 

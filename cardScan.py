@@ -78,6 +78,20 @@ is_button_down = False
 
 for i in range(batchSize):
     cardPicList.append("card_" + str((i + 1)) + ".jpg")
+    
+def intake_place_card():
+    for i in range(800):
+        kit.stepper2.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
+    for i in range(400):
+        kit.stepper2.onestep(direction=stepper.FORWARD, style=stepper.INTERLEAVE)
+    kit.stepper2.release()
+
+def reset_belt_position():
+    for i in range(700):
+        kit.stepper2.onestep(direction=stepper.FORWARD, style=stepper.INTERLEAVE)
+    for i in range(620):
+        kit.stepper2.onestep(direction=stepper.BACKWARD, style=stepper.SINGLE)
+    kit.stepper2.release()
 
 # Initialize the camera for first image processing and take picture
 def takePicture():
@@ -86,9 +100,11 @@ def takePicture():
     for i in range(int(batchSize)):
         take = input("Take a photo (y/n): ")
         if (take.lower() != "n"):
+            intake_place_card()
             imagesTaken = imagesTaken + 1
             picam2.capture_file("Card_Pics_" + str(picSet) + "/" + cardPicList[i]) # Saves images to dedicated image directory for each hard drive log
             print("Image " + str(i+1) + " captured")
+            reset_belt_position()
 
 
 # Tokenization test - inspired by https://github.com/cherry247/OCR-bill-detection/blob/master/ocr.ipynb
@@ -217,19 +233,6 @@ def fixCardDataAndAdd():
             print("Card #" + str(i+1) + ": " + cardList[i])
         needToFix = (input("Do you want to manually fix serial numbers? (Y/N): "))
 
-def intake_place_card():
-    for i in range(800):
-        kit.stepper2.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
-    for i in range(400):
-        kit.stepper2.onestep(direction=stepper.FORWARD, style=stepper.INTERLEAVE)
-    kit.stepper2.release()
-
-def reset_belt_position():
-    for i in range(700):
-        kit.stepper2.onestep(direction=stepper.FORWARD, style=stepper.INTERLEAVE)
-    for i in range(620):
-        kit.stepper2.onestep(direction=stepper.BACKWARD, style=stepper.SINGLE)
-    kit.stepper2.release()
 
 #Function that writes the HDD report
 def writeReport():

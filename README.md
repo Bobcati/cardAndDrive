@@ -13,6 +13,7 @@ pip3 install opencv-python
 sudo apt install tesseract-ocr
 pip3 install pytesseract
 sudo apt-get install netatalk
+pip3 install adafruit-circuitpython-motorkit
 ```
 Then, you will need to make a cardScanner folder by typing in the linux terminal on the raspberry pi:
 ```bash

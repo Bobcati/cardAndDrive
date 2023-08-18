@@ -17,6 +17,13 @@ from csv import writer
 import os
 from PIL import Image
 import sys
+import time
+import board
+from adafruit_motorkit import MotorKit
+from adafruit_motor import stepper
+
+#Initialize Stepper Motor
+kit = MotorKit(i2c=board.I2C())
 
 # Set camera parameters 
 picam2 = Picamera2()
@@ -209,6 +216,20 @@ def fixCardDataAndAdd():
         for i in range(int(batchSize)):   
             print("Card #" + str(i+1) + ": " + cardList[i])
         needToFix = (input("Do you want to manually fix serial numbers? (Y/N): "))
+
+def intake_place_card():
+    for i in range(800):
+        kit.stepper2.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
+    for i in range(400):
+        kit.stepper2.onestep(direction=stepper.FORWARD, style=stepper.INTERLEAVE)
+    kit.stepper2.release()
+
+def reset_belt_position():
+    for i in range(700):
+        kit.stepper2.onestep(direction=stepper.FORWARD, style=stepper.INTERLEAVE)
+    for i in range(620):
+        kit.stepper2.onestep(direction=stepper.BACKWARD, style=stepper.SINGLE)
+    kit.stepper2.release()
 
 #Function that writes the HDD report
 def writeReport():

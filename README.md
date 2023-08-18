@@ -15,8 +15,9 @@ pip3 install pytesseract
 sudo apt-get install netatalk
 pip3 install adafruit-circuitpython-motorkit
 ```
-Then you will need to clone this github repository with the following command
+Then you will need to make a folder called card scanner and clone this github repository with the following command
 ```bash
+mkdir cardScanner
 git clone https://github.com/Bobcati/cardAndDrive.git
 ```
 

@@ -100,11 +100,11 @@ def takePicture():
     for i in range(int(batchSize)):
         take = input("Take a photo (y/n): ")
         if (take.lower() != "n"):
-            intake_place_card()
+            #intake_place_card()
             imagesTaken = imagesTaken + 1
             picam2.capture_file("Card_Pics_" + str(picSet) + "/" + cardPicList[i]) # Saves images to dedicated image directory for each hard drive log
             print("Image " + str(i+1) + " captured")
-            reset_belt_position()
+            #reset_belt_position()
 
 
 # Tokenization test - inspired by https://github.com/cherry247/OCR-bill-detection/blob/master/ocr.ipynb

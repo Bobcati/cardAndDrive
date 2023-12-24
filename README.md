@@ -74,7 +74,7 @@ When you open WinSCP, you will be prompted by a login screen similar to that of 
 ## Usage
 Simply run the cardScanner.py file in your raspberry pi terminal by typing:
 ```bash
-python3 cardScanner.py
+python3 cardScan.py
 ```
 You will be prompted to input a folder number, card batch size, and home directory (your username is your home director). Make sure your folder number is a different from the image folders you have made previously.
 Align the card under the camera and press any letter on the keyboard except for "n" and then the enter key to to take a picture.

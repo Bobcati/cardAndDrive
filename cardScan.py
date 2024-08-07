@@ -23,7 +23,7 @@ from adafruit_motorkit import MotorKit
 from adafruit_motor import stepper
 
 #Initialize Stepper Motor
-kit = MotorKit(i2c=board.I2C())
+#kit = MotorKit(i2c=board.I2C())
 
 # Set camera parameters 
 picam2 = Picamera2()
@@ -37,9 +37,26 @@ picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous, "AfSpeed": contro
 homeDirectory = input("Enter your pi home directory: ")
 batchSize = 0
 picSet = 0
+
+#Set important global variables
+cardPicList = []
+cardList = []
+cardIndex = 0 # must be global otherwise resets to 0 every time, which is bad!
+imagesTaken = 0
+tempLocation = ""
+
+#Callibration and draw_rectangle defaults
+left = 0
+top = 0
+right = 1
+bottom = 1
+roi_point = []
+is_button_down = False
+    
+
 #Declare picSet and batchSize with incorrect input rejection
 def declarePicAndBatch():
-    global batchSize, picSet
+    global batchSize, picSet, cardPicList
     #Incorrect input rejection
     initBatchSize = input("Enter the card batch size you wish to record: ")
     while initBatchSize.isdigit() != True or initBatchSize == 0:
@@ -49,6 +66,8 @@ def declarePicAndBatch():
         else:   
             initBatchSize = input("Please enter a valid integer for batch size: ")
     batchSize = int(initBatchSize)
+    for i in range(batchSize):
+        cardPicList.append("card_" + str((i + 1)) + ".jpg")
 
     initPicSet = input("Enter picture set number: ") # Global variable for the hard drive log number
     while initPicSet.isdigit() != True:
@@ -58,27 +77,10 @@ def declarePicAndBatch():
         else:
             initPicSet = input("Please enter a valid integer for picture set number: ")
     picSet = int(initPicSet)
+    print("Batch size: " + str(batchSize))
+    print("Picture set number: " + str(picSet))
 declarePicAndBatch()
 
-cardPicList = []
-cardList = []
-cardIndex = 0 # must be global otherwise resets to 0 every time, which is bad!
-imagesTaken = 0
-tempLocation = ""
-print("Batch size: " + str(batchSize))
-print("Picture set number: " + str(picSet))
-
-#Callibration and draw_rectangle defaults
-left = 0
-top = 0
-right = 1
-bottom = 1
-roi_point = []
-is_button_down = False
-
-for i in range(batchSize):
-    cardPicList.append("card_" + str((i + 1)) + ".jpg")
-    
 def intake_place_card():
     for i in range(800):
         kit.stepper2.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
@@ -97,6 +99,7 @@ def reset_belt_position():
 def takePicture():
     global cardPicList
     global imagesTaken
+    global batchSize
     for i in range(int(batchSize)):
         take = input("Take a photo (y/n): ")
         if (take.lower() != "n"):
@@ -294,10 +297,3 @@ def looper():
 
 # Functions called here to execute the program
 looper()
-
-
-
-
-
-
-
